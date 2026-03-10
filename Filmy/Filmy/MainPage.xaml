@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Filmy.MainPage"
+             Title="Movie Search">
+
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="*">
+        <StackLayout Padding="10" Spacing="10">
+            <SearchBar 
+                x:Name="SearchBar"
+                Placeholder="Search movies..."
+                Text="{Binding SearchQuery}"
+                SearchButtonPressed="OnSearchButtonPressed"
+                PlaceholderColor="#999"/>
+
+            <Button 
+                Text="Search" 
+                Clicked="OnSearchClicked"
+                Padding="10"/>
+
+            <StackLayout Orientation="Horizontal" Spacing="5" Padding="0,5">
+                <Button 
+                    Text="Search Results" 
+                    Clicked="ShowSearchResults"
+                    WidthRequest="150"/>
+                <Button 
+                    Text="Favorites" 
+                    Clicked="ShowFavorites"
+                    WidthRequest="150"/>
+            </StackLayout>
+        </StackLayout>
+
+        <CollectionView 
+            x:Name="MoviesCollectionView"
+            Grid.Row="1"
+            ItemsSource="{Binding Movies}"
+            SelectionMode="Single"
+            Margin="10">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout 
+                    Orientation="Vertical" 
+                    ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="10" Spacing="5" BackgroundColor="#f0f0f0">
+                        <Label 
+                            Text="{Binding Title}" 
+                            FontSize="18" 
+                            FontAttributes="Bold"/>
+                        <Label 
+                            Text="{Binding ReleaseDate, StringFormat='Release: {0}'}" 
+                            FontSize="12"/>
+                        <Label 
+                            Text="{Binding VoteAverage, StringFormat='Rating: {0:F1}/10'}" 
+                            FontSize="12"/>
+                        <Label 
+                            Text="{Binding Overview}" 
+                            FontSize="12"
+                            LineBreakMode="WordWrap"
+                            MaxLines="3"/>
+                        <StackLayout Orientation="Horizontal" Spacing="5">
+                            <Button 
+                                Text="View" 
+                                Clicked="OnViewDetails"
+                                CommandParameter="{Binding .}"
+                                WidthRequest="80"/>
+                            <Button 
+                                Clicked="OnToggleFavorite"
+                                CommandParameter="{Binding .}"
+                                WidthRequest="110">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsFavorite}" Value="True">
+                                        <Setter Property="Text" Value="Remove" />
+                                        <Setter Property="BackgroundColor" Value="#ff6b6b" />
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsFavorite}" Value="False">
+                                        <Setter Property="Text" Value="Add" />
+                                        <Setter Property="BackgroundColor" Value="#51cf66" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </StackLayout>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
